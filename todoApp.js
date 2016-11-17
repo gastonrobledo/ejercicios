@@ -8,8 +8,8 @@
     function init(){
     getDate();
     document.getElementById("save").addEventListener("click",save);
-
 }
+
 
     function getDate(){
     var today = new Date();
@@ -33,74 +33,122 @@
 
 }
     function show() {
-    //traigo el objeto del localStorage
-    todoObj.init();//actualizo el JSON
-    var taskList = todoObj.getAll();
-
-    //para que no se duplique la tabla
-    var oldTable = document.getElementById("list");
-    if (oldTable != null) {
+        //traigo el objeto del localStorage
+        todoObj.init();//actualizo el JSON
+        var taskList = todoObj.getAll();
         var tableDiv = document.getElementById("tableBox");
-        tableDiv.removeChild(oldTable);
-    }
 
-    //Creo la tabla
-    var table = document.createElement("table");
-    table.setAttribute("id", "list");
+        //creo sortBox
+        var sortBox = document.getElementById("sortBox");
+        if (sortBox == null) {
+            sortBox = document.createElement("select");
+            sortBox.setAttribute("id", "sortBox");
+            var optDate = document.createElement("option");
+            var optDateDes = document.createElement("option");
+            var optTitle = document.createElement("option");
+            var optTitleDes = document.createElement("option");
+            optDate.text = "Date - new first -";
+            optDate.value = "-date";
+            optDateDes.text = "Date - old first -"
+            optDateDes.value = "date"
+            optTitle.text = "Title A to Z";
+            optTitle.value = "title";
+            optTitleDes.text = "Title Z to A";
+            optTitleDes.value = "-title";
+            sortBox.appendChild(optDate);
+            sortBox.appendChild(optDateDes)
+            sortBox.appendChild(optTitle);
+            sortBox.appendChild(optTitleDes);
+            sortBox.addEventListener("change",show);
 
-    for (var i = 0; i < taskList.length; i++) {
-        {
-            //creo las filas y celdas
-            var row = document.createElement("tr");
-            var cellTitle = document.createElement("td");
-            var cellDescription = document.createElement("td");
-            var cellDate = document.createElement("td");
-            var cellEdit = document.createElement("td");
-            var cellDelete = document.createElement("td");
-            //creo los textNodes
-            var title = document.createTextNode(taskList[i].title);
-            var description = document.createTextNode(taskList[i].description);
-            var date = document.createTextNode(taskList[i].date);
-            var id = document.createElement("input");
+            tableDiv.appendChild(sortBox);
+        }
 
-            id.setAttribute("type", "hidden");
-            id.setAttribute("value", taskList[i].id);
-
-            //botones --- usar setAtribute?
-            var editButton = document.createElement("button");
-            var textE = document.createTextNode("Edit");
-            editButton.appendChild(textE);
-
-            var deleteButton = document.createElement("button");
-            var textD = document.createTextNode("Delete");
-            deleteButton.appendChild(textD);
-
-            editButton.addEventListener("click", edit(id.getAttribute("value")));
+        //para que no se duplique la tabla
+        var oldTable = document.getElementById("list");
+        if (oldTable != null) {
+            tableDiv.removeChild(oldTable);
+        }
 
 
-            //editButton.onclick = edit(taskList[i].id); ///////////
-            //deleteButton.onclick = delTask(taskList[i].id);
+        //Creo la tabla
+        var table = document.createElement("table");
+        table.setAttribute("id", "list");
+        var tHead = document.createElement("th");
+        var titleRow = document.createElement("tr");
+        var headTitle = document.createElement("td");
+        var headDescription = document.createElement("td");
+        var headDate = document.createElement("td");
 
-            //Append tr y td
-            cellTitle.appendChild(title);
-            cellDate.appendChild(date);
-            cellDescription.appendChild(description);
-            cellDelete.appendChild(deleteButton);
-            cellEdit.appendChild(editButton);
-            row.appendChild(cellTitle);
-            row.appendChild(cellDescription);
-            row.appendChild(cellDate);
-            row.appendChild(id);
-            row.appendChild(cellEdit);
-            row.appendChild(cellDelete);
-            table.appendChild(row);
+        tHead.innerHTML = "Task List";
+        headTitle.innerHTML = "Title";
+        headDescription.innerHTML = "Description";
+        headDate.innerHTML = "Due date";
+
+        titleRow.appendChild(tHead);
+        table.appendChild(titleRow);
+        table.appendChild(headTitle);
+        table.appendChild(headDescription);
+        table.appendChild(headDate);
+
+        taskList.sort(dynamicSort(sortBox.value));
+        console.log(sortBox.value);
+        console.log(taskList);
+
+
+        for (var i = 0; i < taskList.length; i++) {
+            {
+                //creo las filas y celdas
+                var row = document.createElement("tr");
+                var cellTitle = document.createElement("td");
+                var cellDescription = document.createElement("td");
+                var cellDate = document.createElement("td");
+                var cellEdit = document.createElement("td");
+                var cellDelete = document.createElement("td");
+                //creo los textNodes
+                var title = document.createTextNode(taskList[i].title);
+                var description = document.createTextNode(taskList[i].description);
+                var date = document.createTextNode(taskList[i].date);
+                var id = document.createElement("input");
+                id.setAttribute("id", "id");
+                id.setAttribute("type", "hidden");
+                id.setAttribute("value", taskList[i].id);
+
+                //botones --- usar setAtribute?
+                var editButton = document.createElement("button");
+                var textE = document.createTextNode("Edit");
+                editButton.appendChild(textE);
+
+                var deleteButton = document.createElement("button");
+                var textD = document.createTextNode("Delete");
+                deleteButton.appendChild(textD);
+
+                editButton.addEventListener("click", edit(id.getAttribute("value")));
+                deleteButton.addEventListener("click", delTask(id.getAttribute("value")));
+
+                //Append tr y td
+                tHead.appendChild(row);
+                cellTitle.appendChild(title);
+                cellDate.appendChild(date);
+                cellDescription.appendChild(description);
+                cellDelete.appendChild(deleteButton);
+                cellEdit.appendChild(editButton);
+                row.appendChild(cellTitle);
+                row.appendChild(cellDescription);
+                row.appendChild(cellDate);
+                row.appendChild(id);
+                row.appendChild(cellEdit);
+                row.appendChild(cellDelete);
+                table.appendChild(row);
+
+
+            }
+            document.getElementById("tableBox").appendChild(table);
+            console.log(taskList);
 
 
         }
-        document.getElementById("tableBox").appendChild(table);
-        console.log(taskList);
     }
-}
     function delTask(id) {
         function f() {
             var task = todoObj.getOne(id);
@@ -130,7 +178,7 @@
             document.getElementById("title").value = task.title;
             document.getElementById("description").value = task.description;
             document.getElementById("date").value = task.date;
-            //document.getElementById("id").value = task.id;
+            document.getElementById("id").setAttribute("value",id);
             document.getElementById("action").value = "edit";
         }
 
@@ -139,7 +187,7 @@
     }
     function save(taskForm) {
 
-        var taskList = new Array();
+        var taskList = [];
         var parsedList = todoObj.getAll();
 
         if (parsedList != null) {
@@ -157,7 +205,7 @@
             id = Date.now();
         }
         else {
-            id = document.getElementById("id");//window.location.search.substr(4);
+            id = document.getElementById("id").value;//window.location.search.substr(4);
         }
 
         //elimino el objeto si lo voy a editar
@@ -165,6 +213,7 @@
             for (var i = 0; i < taskList.length; i++) {
                 if (taskList[i].id == id) {
                     taskList.splice(i, 1);
+                    document.getElementById("action").value = "new";
                     break;
                 }
 
@@ -178,8 +227,19 @@
         taskList.push(task);
 
         localStorage.setItem('taskList', JSON.stringify(taskList));
+        show();
 
     }
+    function dynamicSort(property) {
+            var sortOrder = 1;
+            if (property[0] === "-") { //si tiene un - antes de la property
+                sortOrder = -1;
+                property = property.substr(1);// le saco el -
+            }
+            return function (a, b) {
+                var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+                return result * sortOrder;
+            }
 
-
+}
 
