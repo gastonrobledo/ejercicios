@@ -25,3 +25,7 @@ h1 {
     border-radius: 5px;
 }
 
+td.expired {
+    color: red;
+}
+

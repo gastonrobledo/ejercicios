@@ -32,6 +32,7 @@
 
 
 }
+
     function show() {
         //traigo el objeto del localStorage
         todoObj.init();//actualizo el JSON
@@ -130,6 +131,15 @@
                 tHead.appendChild(row);
                 cellTitle.appendChild(title);
                 cellDate.appendChild(date);
+                //Comparo las fechas
+                var d = Date.parse(taskList[i].date);
+                console.log(d);
+                var today = new Date();
+                console.log(today.getTime());
+                if(today.getTime() > d){
+                    cellDate.setAttribute("class","expired");
+                }
+
                 cellDescription.appendChild(description);
                 cellDelete.appendChild(deleteButton);
                 cellEdit.appendChild(editButton);
@@ -142,6 +152,8 @@
                 table.appendChild(row);
 
 
+
+
             }
             document.getElementById("tableBox").appendChild(table);
             console.log(taskList);
@@ -149,6 +161,7 @@
 
         }
     }
+
     function delTask(id) {
         function f() {
             var task = todoObj.getOne(id);
@@ -171,6 +184,7 @@
 
         return f;
     }
+
     function edit(id) {
         function f() {
             console.log(id);
@@ -185,6 +199,7 @@
         return f;
 
     }
+
     function save(taskForm) {
 
         var taskList = [];
@@ -223,13 +238,30 @@
 
         var task = {'title': title, 'description': description, 'date': date, 'id': id};
 
-        //agrego el nuevo objeto al array
-        taskList.push(task);
+        if (!validate("title",title)) {
 
-        localStorage.setItem('taskList', JSON.stringify(taskList));
-        show();
+            //agrego el nuevo objeto al array
+            taskList.push(task);
 
+            localStorage.setItem('taskList', JSON.stringify(taskList));
+            show();
+        }
+        else{
+            alert("There's another task with the same title");
+        }
     }
+
+    function validate(property, value){ ///Si invierto true por false no funciona, preguntar
+        var taskList = todoObj.getAll();
+        for(var i=0;i<taskList.length;i++) {
+            if (taskList[i][property] == value) {
+                console.log(taskList[i]);
+                return true
+                break;
+            }
+        }
+    }
+
     function dynamicSort(property) {
             var sortOrder = 1;
             if (property[0] === "-") { //si tiene un - antes de la property
