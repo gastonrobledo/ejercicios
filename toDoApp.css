@@ -1,0 +1,31 @@
+body {
+    padding: 0;
+    margin: 0;
+
+}
+
+h1 {
+    font-size: 20px;
+    color: #1b34ff;
+}
+
+
+
+.row {
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+.row label {
+    display: block;
+}
+
+.row input, .row textarea {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+td.expired {
+    color: red;
+}
+

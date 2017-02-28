@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="toDoApp.css" rel="stylesheet" type="text/css"/>
+    <script src="storage.js"></script>
+    <script src="todoApp.js"></script>
+    <title>Edit Task</title>
+</head>
+<body onload="edit(window.location.search.substr(4))">
+<div class="row">
+<form name="taskForm">
+    <div class="row">
+        <label>Title</label>
+        <input type="text" name="title" id="title"/>
+
+    </div>
+    <div class="row">
+        <label>Desctiption</label>
+        <textarea name="description" id="description"></textarea>
+
+    </div>
+    <div class="row">
+        <label>Due Date</label>
+        <input type="date" name="date" id="date" >
+
+    </div>
+    <div class="row">
+        <input type="hidden" value="edit" id="action">
+        <input type="hidden"  id="id">
+        <button type="button" id="save">Save</button>
+    </div>
+</form>
+</div>
+</body>
+</html>

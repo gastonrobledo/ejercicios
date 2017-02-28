@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ToDo App</title>
+    <link href="toDoApp.css" rel="stylesheet" type="text/css"/>
+    <script src="storage.js"></script>
+    <script src="todoApp.js"></script>
+
+</head>
+<body id="body" onload="init()">
+    <h1>My ToDo App</h1>
+    <h2>Create a task</h2>
+    <form name="taskForm">
+        <div class="row">
+            <label>Title</label>
+            <input type="text" name="title" id="title"/>
+
+        </div>
+        <div class="row">
+            <label>Desctiption</label>
+            <textarea name="description" id="description"></textarea>
+
+        </div>
+        <div class="row">
+            <label>Due Date</label>
+            <input type="date" name="date" id="date" >
+
+        </div>
+        <div class="row">
+            <label>Image</label>
+            <input type="file" name="image" id="image" onchange="previewFile()" >
+            <img id= "imgPreview">
+
+        </div>
+         <div class="row">
+             <input type="hidden" id="action" value="new">
+           <button type="button" id="save">Save</button>
+        </div>
+
+    </form>
+
+
+        <div class="row">
+            <button type="button" onclick="show()">Show</button>
+        </div>
+        <div class="row" name="tableBox" id="tableBox">
+
+        </div>
+</body>
+</html>
