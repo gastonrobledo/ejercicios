@@ -8,8 +8,28 @@
     function init(){
     getDate();
     document.getElementById("save").addEventListener("click",save);
-}
+    //document.getElementById("image").addEventListener("onchange",previewFile);
 
+}
+function previewFile() {
+    var preview = document.getElementById('imgPreview');
+    var file    = document.getElementById('image').files[0];
+    var reader  = new FileReader();
+    var string64;
+
+    reader.onloadend = function () {
+        preview.src = reader.result;
+        console.log(preview.src)
+
+    }
+
+
+    if (file !=null) {
+        reader.readAsDataURL(file);
+    }
+    return reader;
+
+}
 
     function getDate(){
     var today = new Date();
@@ -60,7 +80,7 @@
             sortBox.appendChild(optDateDes)
             sortBox.appendChild(optTitle);
             sortBox.appendChild(optTitleDes);
-            sortBox.addEventListener("change",show);
+            sortBox.addEventListener("change", show);
 
             tableDiv.appendChild(sortBox);
         }
@@ -93,9 +113,26 @@
         table.appendChild(headDate);
 
         taskList.sort(dynamicSort(sortBox.value));
-        console.log(sortBox.value);
-        console.log(taskList);
 
+       /* function displayImage(image) {
+
+            return function () {
+
+                if (image.source) {
+                    console.log("definida" + image.source);
+
+                    return image;
+                }
+                else {
+                    var msj = document.createTextNode("This task has no image");
+                    console.log("NO definida" + image.source);
+                    return msj;
+                }
+
+
+            }
+
+        }*/
 
         for (var i = 0; i < taskList.length; i++) {
             {
@@ -104,6 +141,7 @@
                 var cellTitle = document.createElement("td");
                 var cellDescription = document.createElement("td");
                 var cellDate = document.createElement("td");
+                var cellImage = document.createElement("td");
                 var cellEdit = document.createElement("td");
                 var cellDelete = document.createElement("td");
                 //creo los textNodes
@@ -111,6 +149,14 @@
                 var description = document.createTextNode(taskList[i].description);
                 var date = document.createTextNode(taskList[i].date);
                 var id = document.createElement("input");
+                //Image
+                var img = taskList[i].img;
+                var image = new Image();
+                image.src = img;
+                image.alt="No image";
+                image.style.height = '100px';
+                image.style.width = '200px';
+
                 id.setAttribute("id", "id");
                 id.setAttribute("type", "hidden");
                 id.setAttribute("value", taskList[i].id);
@@ -133,34 +179,50 @@
                 cellDate.appendChild(date);
                 //Comparo las fechas
                 var d = Date.parse(taskList[i].date);
-                console.log(d);
                 var today = new Date();
-                console.log(today.getTime());
                 if(today.getTime() > d){
                     cellDate.setAttribute("class","expired");
                 }
 
+
                 cellDescription.appendChild(description);
                 cellDelete.appendChild(deleteButton);
                 cellEdit.appendChild(editButton);
+               /* var finalImg = function (image) {
+                    return function () {
+                        if (image.source) {
+                            console.log("definida" + image.source);
+
+                            return image;
+                        }
+                        else {
+                            var msj = document.createTextNode("This task has no image");
+                            console.log("NO definida" + image.source);
+                            return msj;
+                        }
+                    }
+                }(image);
+                console.log(finalImg(image));*/
+
+                cellImage.appendChild(image);
                 row.appendChild(cellTitle);
                 row.appendChild(cellDescription);
                 row.appendChild(cellDate);
                 row.appendChild(id);
+                row.appendChild(cellImage);
                 row.appendChild(cellEdit);
                 row.appendChild(cellDelete);
                 table.appendChild(row);
 
 
-
-
             }
             document.getElementById("tableBox").appendChild(table);
-            console.log(taskList);
+            //console.log(taskList);
 
 
         }
     }
+
 
     function delTask(id) {
         function f() {
@@ -194,11 +256,14 @@
             document.getElementById("date").value = task.date;
             document.getElementById("id").setAttribute("value",id);
             document.getElementById("action").value = "edit";
+            console.log(document.getElementById("action").value);
         }
 
         return f;
 
     }
+
+
 
     function save(taskForm) {
 
@@ -215,6 +280,9 @@
         var title = document.getElementById("title").value;
         var description = document.getElementById("description").value;
         var date = document.getElementById("date").value;
+        //////image
+        var imgFile = document.getElementById("imgPreview").src;
+        console.log(imgFile);
 
         if (action == "new") {
             id = Date.now();
@@ -236,7 +304,7 @@
 
         }
 
-        var task = {'title': title, 'description': description, 'date': date, 'id': id};
+        var task = {'title': title, 'description': description, 'date': date, 'id': id, "img":imgFile};
 
         if (!validate("title",title)) {
 

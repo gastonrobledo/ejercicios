@@ -27,6 +27,12 @@
             <input type="date" name="date" id="date" >
 
         </div>
+        <div class="row">
+            <label>Image</label>
+            <input type="file" name="image" id="image" onchange="previewFile()" >
+            <img id= "imgPreview">
+
+        </div>
          <div class="row">
              <input type="hidden" id="action" value="new">
            <button type="button" id="save">Save</button>
