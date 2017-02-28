@@ -15,13 +15,15 @@ var Storage = {
 
     getOne: function(id){
         var data = todoObj.getAll();
+        var result;
 
         for(var i=0;i<data.length;i++) {
             if (data[i].id == id) {
-                return data[i];
+                result = data[i];
                 break;
             }
         }
+        return result;
     }
 
 

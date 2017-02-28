@@ -8,7 +8,7 @@
     function init(){
     getDate();
     document.getElementById("save").addEventListener("click",save);
-    //document.getElementById("image").addEventListener("onchange",previewFile);
+
 
 }
 function previewFile() {
@@ -19,7 +19,6 @@ function previewFile() {
 
     reader.onloadend = function () {
         preview.src = reader.result;
-        console.log(preview.src)
 
     }
 
@@ -54,12 +53,11 @@ function previewFile() {
 }
 
     function show() {
-        //traigo el objeto del localStorage
-        todoObj.init();//actualizo el JSON
+        todoObj.init();//update JSON
         var taskList = todoObj.getAll();
         var tableDiv = document.getElementById("tableBox");
 
-        //creo sortBox
+        //create the sortBox
         var sortBox = document.getElementById("sortBox");
         if (sortBox == null) {
             sortBox = document.createElement("select");
@@ -85,14 +83,14 @@ function previewFile() {
             tableDiv.appendChild(sortBox);
         }
 
-        //para que no se duplique la tabla
+        //to avoid table duplication
         var oldTable = document.getElementById("list");
         if (oldTable != null) {
             tableDiv.removeChild(oldTable);
         }
 
 
-        //Creo la tabla
+        //create the table
         var table = document.createElement("table");
         table.setAttribute("id", "list");
         var tHead = document.createElement("th");
@@ -114,29 +112,10 @@ function previewFile() {
 
         taskList.sort(dynamicSort(sortBox.value));
 
-       /* function displayImage(image) {
-
-            return function () {
-
-                if (image.source) {
-                    console.log("definida" + image.source);
-
-                    return image;
-                }
-                else {
-                    var msj = document.createTextNode("This task has no image");
-                    console.log("NO definida" + image.source);
-                    return msj;
-                }
-
-
-            }
-
-        }*/
 
         for (var i = 0; i < taskList.length; i++) {
             {
-                //creo las filas y celdas
+                //create rows and cells
                 var row = document.createElement("tr");
                 var cellTitle = document.createElement("td");
                 var cellDescription = document.createElement("td");
@@ -144,7 +123,7 @@ function previewFile() {
                 var cellImage = document.createElement("td");
                 var cellEdit = document.createElement("td");
                 var cellDelete = document.createElement("td");
-                //creo los textNodes
+                //create textNodes
                 var title = document.createTextNode(taskList[i].title);
                 var description = document.createTextNode(taskList[i].description);
                 var date = document.createTextNode(taskList[i].date);
@@ -161,7 +140,7 @@ function previewFile() {
                 id.setAttribute("type", "hidden");
                 id.setAttribute("value", taskList[i].id);
 
-                //botones --- usar setAtribute?
+                //buttons
                 var editButton = document.createElement("button");
                 var textE = document.createTextNode("Edit");
                 editButton.appendChild(textE);
@@ -177,7 +156,7 @@ function previewFile() {
                 tHead.appendChild(row);
                 cellTitle.appendChild(title);
                 cellDate.appendChild(date);
-                //Comparo las fechas
+                //date comparison
                 var d = Date.parse(taskList[i].date);
                 var today = new Date();
                 if(today.getTime() > d){
@@ -188,22 +167,6 @@ function previewFile() {
                 cellDescription.appendChild(description);
                 cellDelete.appendChild(deleteButton);
                 cellEdit.appendChild(editButton);
-               /* var finalImg = function (image) {
-                    return function () {
-                        if (image.source) {
-                            console.log("definida" + image.source);
-
-                            return image;
-                        }
-                        else {
-                            var msj = document.createTextNode("This task has no image");
-                            console.log("NO definida" + image.source);
-                            return msj;
-                        }
-                    }
-                }(image);
-                console.log(finalImg(image));*/
-
                 cellImage.appendChild(image);
                 row.appendChild(cellTitle);
                 row.appendChild(cellDescription);
@@ -217,8 +180,6 @@ function previewFile() {
 
             }
             document.getElementById("tableBox").appendChild(table);
-            //console.log(taskList);
-
 
         }
     }
@@ -227,10 +188,8 @@ function previewFile() {
     function delTask(id) {
         function f() {
             var task = todoObj.getOne(id);
-            console.log(task);
             if (confirm("Do you want to delete the task '" + task.title + "'?")) {
                 var taskList = todoObj.getAll();
-                console.log(taskList);
                 for (var i = 0; i < taskList.length; i++) {
                     if (taskList[i].id == task.id) {
                         taskList.splice(i, 1);
@@ -249,14 +208,12 @@ function previewFile() {
 
     function edit(id) {
         function f() {
-            console.log(id);
             var task = todoObj.getOne(id);
             document.getElementById("title").value = task.title;
             document.getElementById("description").value = task.description;
             document.getElementById("date").value = task.date;
             document.getElementById("id").setAttribute("value",id);
             document.getElementById("action").value = "edit";
-            console.log(document.getElementById("action").value);
         }
 
         return f;
@@ -280,9 +237,8 @@ function previewFile() {
         var title = document.getElementById("title").value;
         var description = document.getElementById("description").value;
         var date = document.getElementById("date").value;
-        //////image
+        //image
         var imgFile = document.getElementById("imgPreview").src;
-        console.log(imgFile);
 
         if (action == "new") {
             id = Date.now();
@@ -291,7 +247,7 @@ function previewFile() {
             id = document.getElementById("id").value;//window.location.search.substr(4);
         }
 
-        //elimino el objeto si lo voy a editar
+        //if editing, delete the object with the same id
         if (action == "edit") {
             for (var i = 0; i < taskList.length; i++) {
                 if (taskList[i].id == id) {
@@ -308,7 +264,7 @@ function previewFile() {
 
         if (!validate("title",title)) {
 
-            //agrego el nuevo objeto al array
+            //push the new object
             taskList.push(task);
 
             localStorage.setItem('taskList', JSON.stringify(taskList));
@@ -323,7 +279,6 @@ function previewFile() {
         var taskList = todoObj.getAll();
         for(var i=0;i<taskList.length;i++) {
             if (taskList[i][property] == value) {
-                console.log(taskList[i]);
                 return true
                 break;
             }
@@ -332,9 +287,9 @@ function previewFile() {
 
     function dynamicSort(property) {
             var sortOrder = 1;
-            if (property[0] === "-") { //si tiene un - antes de la property
+            if (property[0] === "-") { // "-" before the property string
                 sortOrder = -1;
-                property = property.substr(1);// le saco el -
+                property = property.substr(1);// deletes the "-"
             }
             return function (a, b) {
                 var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
