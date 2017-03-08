@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>Theme Template for Bootstrap</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../ejercicios/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ejercicios/bower_components/bootstrap/dist/css/custom.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css">
+
+    <!-- Bootstrap theme -->
+    <!--link href="../ejercicios/bower_components/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet">
+
+
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body onload="init();show();" >
+
+<!-- Fixed navbar -->
+<nav class="navbar navbar-inverse navbar-static-top">
+    <div class="container">
+        <div class="navbar-header">
+
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid" role="main">
+    <div class="row">
+        <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12 page-header">
+            <span class="h1">Todo App</span>
+            <a class="btn btn-lg btn-success pull-right form-group" href="#" role="button">Create new</a>
+        </div>
+    </div>
+    <form id="taskForm">
+    <div class="row">
+        <div class="col-md-9 col-sm-6 col-xs-12">
+
+                <div class="form-group">
+                    <label for="title" class="center-block">Title</label>
+                    <input id="title" type="text" class="form-control" placeholder="Title">
+                    <input type="hidden" id="action" value="new">
+                </div>
+                <div class="form-group">
+                    <label for="description" class="center-block">Description</label>
+                    <input id="description" type="text" class="form-control" placeholder="Description">
+                </div>
+                <div class="form-group">
+                    <label for="date" class="center-block">Due Date</label>
+                    <input id="date" type="date" class="form-control glyphicon glyphicon-calendar">
+                </div>
+            <div class="form-group">
+                <label>Completed</label>
+                <input id="completed"  type="checkbox" >
+                <label for="completed" ></label>
+
+            </div>
+        </div>
+
+
+        <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+            <div class="thumbnail">
+                <img class="img-rounded img-responsive"
+                     src="https://getuikit.com/v2/docs/images/placeholder_600x400.svg" id= "imgPreview">
+                <div class="text-center">
+                    <label for="image" class="btn btn-lg btn-default btn-file form-group" href="#" role="button">
+                        Upload Image
+                        <input type="file" id="image" onchange="previewFile();$('#imgInfo').html($(this).val());
+                        " style="display:none;" >
+                        <span class='label label-info form-group' id="imgInfo"></span>
+                    </label>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row form-group">
+
+        <div class="col-md-4 col-md-offset-8 col-sm-6  col-sm-offset-5 col-xs-12 btn-group">
+            <div class="col-md-6 col-sm-6 col-xs-12">
+                <a class="btn btn-lg btn-success btn-block "  id="save" role="button">Save</a>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+                <a class="btn btn-lg btn-danger btn-block "  id="cancel" role="button">Cancel</a>
+            </div>
+        </div>
+    </div>
+    </form>
+    <div class="row form-group">
+        <div class=" col-lg-2 col-md-3 col-sm-4 col-xs-12" id="sortDiv"></div>
+        <div class="col-lg-10 col-md-9 col-sm-8 col-xs-12" ></div>
+    </div>
+    <div class="panel panel-default">
+        <div class="table-responsive" id="tableDiv">
+
+        </div>
+    </div>
+    <nav aria-label="Page navigation" id="pagNav" class="text-center">
+        <ul class="pagination" id="pagination">
+            <li>
+
+            </li>
+
+        </ul>
+
+    </nav>
+</div> <!-- /container -->
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+<script src="../ejercicios/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="storage.js"></script>
+<script src="todoApp.js"></script>
+</body>
+</html>
