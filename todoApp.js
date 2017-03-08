@@ -11,6 +11,7 @@ function init() {
     document.getElementById("cancel").addEventListener("click", clear);
     pager = new Pager("list", 3);
 }
+
 function previewFile() {
     var preview = document.getElementById('imgPreview');
     var file = document.getElementById('image').files[0];
@@ -43,9 +44,9 @@ function getDate() {
         month = '0' + month
     }
     var today = year + '-' + month + '-' + day;
-    document.getElementById("date").value = today;
-    document.getElementById("date").setAttribute('min', today);
-    document.getElementById("date").onkeydown = function (e) {
+    var date = document.getElementById("date");
+    date.value = today;
+    date.onkeydown = function (e) {
         e.preventDefault();
     }
 
@@ -183,7 +184,6 @@ function show() {
         pager.init();
         pager.showPageNav('pager', 'pagination');
         pager.showPage(1);
-        console.log(taskList.length);
 
 
     }
@@ -322,7 +322,7 @@ function dynamicSort(property) {
 
 function Pager(tableName, itemsPerPage) {
     this.tableName = tableName;
-    this.itemsPerPage = itemsPerPage;
+    this.itemsPerPage = itemsPerPage || 10;
     this.currentPage = 1;
     this.pages = 0;
     this.inited = false;
@@ -376,8 +376,9 @@ function Pager(tableName, itemsPerPage) {
         var element = document.getElementById(positionId);
 
         var pagerHtml = '<li><span onclick="' + pagerName + '.prev();" class=""> &#171 Prev </span></li> ';
-        for (var page = 1; page <= this.pages; page++)
+        for (var page = 1; page <= this.pages; page++) {
             pagerHtml += '<li><span id="pg' + page + '" class="" onclick="' + pagerName + '.showPage(' + page + ');">' + page + '</span></li> ';
+        }
         pagerHtml += '<li><span onclick="' + pagerName + '.next();" class="pg-normal"> Next &#187;</span></li>';
 
         element.innerHTML = pagerHtml;
