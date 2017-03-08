@@ -8,10 +8,10 @@
     function init(){
     getDate();
     document.getElementById("save").addEventListener("click",save);
-
-
+    document.getElementById("cancel").addEventListener("click",clear);
+    pager = new Pager("list",3);
 }
-function previewFile() {
+    function previewFile() {
     var preview = document.getElementById('imgPreview');
     var file    = document.getElementById('image').files[0];
     var reader  = new FileReader();
@@ -55,13 +55,17 @@ function previewFile() {
     function show() {
         todoObj.init();//update JSON
         var taskList = todoObj.getAll();
-        var tableDiv = document.getElementById("tableBox");
+        var tableDiv = document.getElementById("tableDiv");
+        var sortDiv = document.getElementById("sortDiv");
+
+
 
         //create the sortBox
         var sortBox = document.getElementById("sortBox");
         if (sortBox == null) {
             sortBox = document.createElement("select");
             sortBox.setAttribute("id", "sortBox");
+            sortBox.setAttribute("class","form-control");
             var optDate = document.createElement("option");
             var optDateDes = document.createElement("option");
             var optTitle = document.createElement("option");
@@ -80,7 +84,7 @@ function previewFile() {
             sortBox.appendChild(optTitleDes);
             sortBox.addEventListener("change", show);
 
-            tableDiv.appendChild(sortBox);
+            sortDiv.appendChild(sortBox);
         }
 
         //to avoid table duplication
@@ -93,22 +97,9 @@ function previewFile() {
         //create the table
         var table = document.createElement("table");
         table.setAttribute("id", "list");
-        var tHead = document.createElement("th");
-        var titleRow = document.createElement("tr");
-        var headTitle = document.createElement("td");
-        var headDescription = document.createElement("td");
-        var headDate = document.createElement("td");
-
-        tHead.innerHTML = "Task List";
-        headTitle.innerHTML = "Title";
-        headDescription.innerHTML = "Description";
-        headDate.innerHTML = "Due date";
-
-        titleRow.appendChild(tHead);
-        table.appendChild(titleRow);
-        table.appendChild(headTitle);
-        table.appendChild(headDescription);
-        table.appendChild(headDate);
+        table.setAttribute("class","table table-striped table-hover table-condensed data-toggle='table'" +
+            " data-pagination='true' data-page-list='[5, 10, 20, 50, 100, 200]'");
+        var tBody = document.createElement('tbody');
 
         taskList.sort(dynamicSort(sortBox.value));
 
@@ -122,7 +113,6 @@ function previewFile() {
                 var cellDate = document.createElement("td");
                 var cellImage = document.createElement("td");
                 var cellEdit = document.createElement("td");
-                var cellDelete = document.createElement("td");
                 //create textNodes
                 var title = document.createTextNode(taskList[i].title);
                 var description = document.createTextNode(taskList[i].description);
@@ -134,56 +124,72 @@ function previewFile() {
                 image.src = img;
                 image.alt="No image";
                 image.style.height = '100px';
-                image.style.width = '200px';
+                image.style.width = '100px';
 
                 id.setAttribute("id", "id");
                 id.setAttribute("type", "hidden");
                 id.setAttribute("value", taskList[i].id);
 
                 //buttons
-                var editButton = document.createElement("button");
-                var textE = document.createTextNode("Edit");
-                editButton.appendChild(textE);
+                var editButton = document.createElement("a");
+                var editIcon= document.createElement("span");
+                editIcon.setAttribute("class","fa fa-pencil fa-3x aria-hidden='true'");
+                editButton.setAttribute("class","");
+                editButton.appendChild(editIcon);
 
-                var deleteButton = document.createElement("button");
-                var textD = document.createTextNode("Delete");
-                deleteButton.appendChild(textD);
+                var deleteButton = document.createElement("a");
+                var delIcon= document.createElement("span");
+                delIcon.setAttribute("class","fa fa-times fa-3x aria-hidden='true'");
+                deleteButton.setAttribute("class","");
+                deleteButton.appendChild(delIcon);
 
                 editButton.addEventListener("click", edit(id.getAttribute("value")));
                 deleteButton.addEventListener("click", delTask(id.getAttribute("value")));
 
                 //Append tr y td
-                tHead.appendChild(row);
+                //tBody.appendChild(row);
                 cellTitle.appendChild(title);
                 cellDate.appendChild(date);
                 //date comparison
                 var d = Date.parse(taskList[i].date);
                 var today = new Date();
                 if(today.getTime() > d){
-                    cellDate.setAttribute("class","expired");
+                    row.setAttribute("class","danger");
                 }
+                //check if it's a completed task
+                if(taskList[i].completed==true){
+                    row.setAttribute("class","success");
+                };
+
+
 
 
                 cellDescription.appendChild(description);
-                cellDelete.appendChild(deleteButton);
                 cellEdit.appendChild(editButton);
+                cellEdit.appendChild(deleteButton);
                 cellImage.appendChild(image);
+                row.appendChild(cellDate);
                 row.appendChild(cellTitle);
                 row.appendChild(cellDescription);
-                row.appendChild(cellDate);
                 row.appendChild(id);
                 row.appendChild(cellImage);
                 row.appendChild(cellEdit);
-                row.appendChild(cellDelete);
-                table.appendChild(row);
+                tBody.appendChild(row);
+                table.appendChild(tBody);
 
 
             }
-            document.getElementById("tableBox").appendChild(table);
+            document.getElementById("tableDiv").appendChild(table);
+
+
+            pager.init();
+            pager.showPageNav('pager','pagination');
+            pager.showPage(1);
+            console.log(taskList.length);
+
 
         }
     }
-
 
     function delTask(id) {
         function f() {
@@ -220,7 +226,17 @@ function previewFile() {
 
     }
 
-
+    function clear(){
+        var img= document.getElementById("imgPreview");
+        var imgInfo= document.getElementById("imgInfo");
+        var r = confirm("Do you want to cancel?");
+            if(r==true){
+                document.getElementById("taskForm").reset();
+                img.setAttribute("src","https://getuikit.com/v2/docs/images/placeholder_600x400.svg")//display the default thumbnail
+                imgInfo.innerHTML= "";
+                getDate();
+            }
+    }
 
     function save(taskForm) {
 
@@ -237,6 +253,7 @@ function previewFile() {
         var title = document.getElementById("title").value;
         var description = document.getElementById("description").value;
         var date = document.getElementById("date").value;
+        var completed= document.getElementById("completed").checked;
         //image
         var imgFile = document.getElementById("imgPreview").src;
 
@@ -244,7 +261,7 @@ function previewFile() {
             id = Date.now();
         }
         else {
-            id = document.getElementById("id").value;//window.location.search.substr(4);
+            id = document.getElementById("id").value;
         }
 
         //if editing, delete the object with the same id
@@ -260,7 +277,7 @@ function previewFile() {
 
         }
 
-        var task = {'title': title, 'description': description, 'date': date, 'id': id, "img":imgFile};
+        var task = {'title': title, 'description': description, 'date': date, 'id': id, "img":imgFile, "completed":completed};
 
         if (!validate("title",title)) {
 
@@ -298,3 +315,66 @@ function previewFile() {
 
 }
 
+    function Pager(tableName, itemsPerPage) {
+    this.tableName = tableName;
+    this.itemsPerPage = itemsPerPage;
+    this.currentPage = 1;
+    this.pages = 0;
+    this.inited = false;
+
+    this.showRecords = function(from, to) {
+        var rows = document.getElementById(tableName).rows;
+        // i starts from 1 to skip table header row
+        for (var i = 0; i < rows.length; i++) {
+            if (i >= from && i <= to)
+                rows[i].style.display = '';
+            else
+                rows[i].style.display = 'none';
+        }
+    }
+
+    this.showPage = function(pageNumber) {
+        if (! this.inited) {
+            alert("not inited");
+            return;
+        }
+        this.currentPage = pageNumber;
+        var from = (pageNumber - 1) * itemsPerPage ;
+        var to = from + itemsPerPage - 1;
+        this.showRecords(from, to);
+    }
+
+    this.prev = function() {
+        if (this.currentPage > 1)
+            this.showPage(this.currentPage - 1);
+    }
+
+    this.next = function() {
+        if (this.currentPage < this.pages) {
+            this.showPage(this.currentPage + 1);
+        }
+    }
+
+    this.init = function() {
+        var rows = document.getElementById(tableName).rows;
+        var records = (rows.length);//-1
+        this.pages = Math.ceil(records / itemsPerPage);
+        console.log("pages "+ this.pages);
+        this.inited = true;
+    }
+
+    this.showPageNav = function(pagerName, positionId) {
+        if (! this.inited) {
+            alert("not inited");
+            return;
+        }
+        var element = document.getElementById(positionId);
+
+        var pagerHtml = '<li><span onclick="' + pagerName + '.prev();" class=""> &#171 Prev </span></li> ';
+        for (var page = 1; page <= this.pages; page++)
+            pagerHtml += '<li><span id="pg' + page + '" class="" onclick="' + pagerName + '.showPage(' + page + ');">' + page + '</span></li> ';
+        pagerHtml += '<li><span onclick="'+pagerName+'.next();" class="pg-normal"> Next &#187;</span></li>';
+
+        element.innerHTML = pagerHtml;
+    }
+}
