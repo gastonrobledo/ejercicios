@@ -331,10 +331,10 @@ function Pager(tableName, itemsPerPage) {
         var rows = document.getElementById(tableName).rows;
         // i starts from 1 to skip table header row
         for (var i = 0; i < rows.length; i++) {
-            if (i >= from && i <= to)
-                rows[i].style.display = '';
-            else
-                rows[i].style.display = 'none';
+            if (i >= from && i <= to){
+                rows[i].style.display = ''}
+            else{
+                rows[i].style.display = 'none'}
         }
     }
 
