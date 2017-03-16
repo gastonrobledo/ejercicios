@@ -1,31 +1,20 @@
-body {
-    padding: 0;
-    margin: 0;
-
+#tableDiv img{
+    max-width: 120px;
+    max-height: 120px;
 }
-
-h1 {
-    font-size: 20px;
-    color: #1b34ff;
+.full button span {
+    background-color: limegreen;
+    border-radius: 32px;
+    color: black;
 }
-
-
-
-.row {
-    padding: 5px;
-    box-sizing: border-box;
+.partially button span {
+    background-color: orange;
+    border-radius: 32px;
+    color: black;
 }
-
-.row label {
-    display: block;
+.input-group{
+    font-family: "Lato", sans-serif;
 }
-
-.row input, .row textarea {
-    border: 1px solid #ccc;
-    border-radius: 5px;
+.input-group-btn{
+    vertical-align: bottom;
 }
-
-td.expired {
-    color: red;
-}
-

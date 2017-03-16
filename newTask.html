@@ -1,0 +1,68 @@
+<div class="container-fluid" role="main">
+    <div class="row">
+        <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12 page-header">
+            <span class="h1" ui-sref="home">Todo App</span>
+        </div>
+    </div>
+    <form id="taskForm" ng-submit="addTask()">
+        <div class="row">
+            <div class="col-md-9 col-sm-6 col-xs-12">
+
+                <div class="form-group">
+                    <label for="title" class="center-block">Title</label>
+                    <input id="title" ng-model="newTask.title" type="text" class="form-control" placeholder="Title">
+
+                </div>
+                <div class="form-group">
+                    <label for="description" class="center-block">Description</label>
+                    <input id="description" ng-model="newTask.description" type="text" class="form-control"
+                           placeholder="Description">
+                </div>
+                <div class="input-group">
+                    <label for="date" >Due Date</label>
+                    <input id="date" type="text" class="form-control" uib-datepicker-popup="{{format}}"  value="{{ newTask.date}}" ng-model="newTask.date" is-open="popup1.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" />
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="open1()">
+                            <i class="glyphicon glyphicon-calendar"></i>
+                        </button>
+                    </span>
+                </div>
+                <div class="form-group">
+                    <label>Completed</label>
+                    <input ng-model="newTask.completed" id="completed" type="checkbox">
+                    <label for="completed"></label>
+                </div>
+            </div>
+
+            <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+                <div class="thumbnail">
+                    <img class="img-rounded img-responsive"
+                         ng-src="{{newTask.imgPreview}}" id="imgPreview" alt="no image"
+                         ng-model="newTask.imgPreview">
+                    <div class="text-center">
+                        <label for="image" class="btn btn-lg btn-default btn-file form-group" href="#" role="button">
+                            Upload Image
+                            <input ng-model="newTask.image" type="file" id="image" onchange="angular.element(this).scope().previewFile(this);$('#imgInfo').html($(this).val());
+                        " style="display:none;">
+                            <span class='label label-info form-group' id="imgInfo" ng-model="imgInfo"></span>
+                        </label>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row form-group">
+
+            <div class="col-md-4 col-md-offset-8 col-sm-6  col-sm-offset-5 col-xs-12 btn-group">
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <a class="btn btn-lg btn-success btn-block " ng-click="addTask()" id="save" role="button">Save</a>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <a class="btn btn-lg btn-danger btn-block " id="cancel" ng-click="clear()" role="button">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </form>
+
+</div> <!-- /container -->
+

@@ -1,0 +1,34 @@
+<div class="container-fluid" role="main">
+    <div class="row">
+        <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12 page-header">
+            <span class="h1">Todo App</span>
+            <a ui-sref="addTask" class="btn btn-lg btn-success pull-right form-group" role="button">Create new</a>
+        </div>
+    </div>
+    <div class="row form-group">
+        <div class=" col-lg-2 col-md-3 col-sm-4 col-xs-12" id="sortDiv"></div>
+        <div class="col-lg-10 col-md-9 col-sm-8 col-xs-12"></div>
+    </div>
+    <div class="panel panel-default">
+        <div class="table-responsive" id="tableDiv">
+            <table class="table table-striped table-hover table-condensed">
+                <tr ng-repeat="item in taskList | startFrom:(currentPage-1)*itemsPerPage | limitTo:itemsPerPage  track by $index">
+                    <td>{{item.date| date : "dd.MMM.y"}}</td>
+                    <td>{{item.title}}</td>
+                    <td>{{item.description}}</td>
+                    <td><img ng-src="{{item.imgPreview}}"></td>
+                    <td><a ng-click="editTask(item.id)"><span class="fa fa-pencil fa-3x aria-hidden='true'"></span></a>
+                    </td>
+                    <td><a ng-click="deleteTask(item.id)"><span class="fa fa-times fa-3x aria-hidden='true'"></span></a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+{{currentPage}}
+
+        <ul uib-pagination items-per-page="itemsPerPage" total-items="totalItems" ng-model="currentPage"></ul>
+
+
+
+</div> <!--/container -->

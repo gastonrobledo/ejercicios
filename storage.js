@@ -2,7 +2,13 @@
  * Created by federpc on 03/11/16.
  */
 
-var Storage = {
+
+
+
+
+
+
+/*var Storage = {
     init: function(){
         var data = localStorage.getItem('taskList');
         this.data = data ? JSON.parse(data) : [];
@@ -31,3 +37,4 @@ var Storage = {
 };
 
 var todoObj = Storage.init();
+    */
