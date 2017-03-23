@@ -3,21 +3,33 @@
  */
 angular.module('auth.services', [])
     .factory('AuthenticationService',
-        ['$http', '$q',
-            function ($http, $q) {
+        ['$http', '$q', '$window', '$state',
+            function ($http, $q, $window, $state) {
                 var service = {};
+                service.CheckSession = function () {
+                    var token = $window.sessionStorage.getItem('token');
+                    if (token == null) {
+                        console.log('Not LoggedIn');
+                        $state.go('auth');
+                    }
+                    else {
+                        console.log('Logged In');
+                        return true;
+                    }
+
+                };
 
                 service.Login = function (email, password) {
                     var deferred = $q.defer();
                     $http.post('http://localhost:3000/api/auth', {email: email, password: password})
                         .then(function (response) {
-                            deferred.resolve(response);
+                            deferred.resolve(response.data.token);
                             console.log('Response from server: ' + response);
                         })
-                        ,function (error) {
-                            deferred.reject(error);
-                            console.log('Some error as occurred!: ' + error);
-                        };
+                        .catch(function(error) {
+                        deferred.reject(error);
+                        console.log('Some error as occurred!: ' + error);
+                    });
                     return deferred.promise;
                 };
 
@@ -28,25 +40,25 @@ angular.module('auth.services', [])
                             deferred.resolve(response);
                             console.log('User saved:' + response);
                         })
-                        ,function (error) {
-                            deferred.reject(error);
-                            console.log('Some error as occurred: ' + error)
-                        };
+                        , function (error) {
+                        deferred.reject(error);
+                        console.log('Some error as occurred: ' + error)
+                    };
                     return deferred.promise;
 
                 };
 
                 service.GetAll = function (token) {
                     var deferred = $q.defer();
-                    $http.get('http://localhost:3000/api/users',{ headers: {'x-access-token': token} })
+                    $http.get('http://localhost:3000/api/users', {headers: {'x-access-token': token}})
                         .then(function (response) {
                             deferred.resolve(response.data);
                             console.log(response);
                         })
-                        ,function (error) {
-                            deferred.resolve(error);
-                            console.log('Some error as occurred: ' + error)
-                        };
+                        , function (error) {
+                        deferred.resolve(error);
+                        console.log('Some error as occurred: ' + error)
+                    };
                     return deferred.promise;
 
                 };
@@ -58,12 +70,12 @@ angular.module('auth.services', [])
                             deferred.resolve(response);
                             console.log(response);
                         })
-                        ,function (error) {
-                            deferred.reject(error);
-                            console.log('Some error as occurred: ' + error)
-                        }
+                        , function (error) {
+                        deferred.reject(error);
+                        console.log('Some error as occurred: ' + error)
+                    }
                     return deferred.promise;
                 };
-                
+
                 return service;
             }]);
