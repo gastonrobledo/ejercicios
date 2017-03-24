@@ -40,10 +40,10 @@ angular.module('auth.services', [])
                             deferred.resolve(response);
                             console.log('User saved:' + response);
                         })
-                        , function (error) {
+                        .catch(function (error) {
                         deferred.reject(error);
                         console.log('Some error as occurred: ' + error)
-                    };
+                    });
                     return deferred.promise;
 
                 };

@@ -211,4 +211,18 @@ angular.module('toDoApp.controllers', ['toDoApp.services','auth.services'])
             })
     };
 
-}]);
+}])
+    .controller('registrationControl',['$scope','$state','AuthenticationService','ngMessages',function($scope,$state,authService,$ngMessages){
+        $scope.register = function(user,isValid) {
+            if (isValid) {
+                authService.CreateUser(user)
+                    .then(function (response) {
+                        console.log(response.data);
+                        console.log(user);
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    })
+            }
+        }
+    }]);

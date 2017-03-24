@@ -32,11 +32,19 @@ angular.module('toDoApp', ['ui.router','ui.bootstrap','ngAnimate', 'toDoApp.serv
             controller: 'loginControl'
         };
 
+        var registration={
+            name :'registration',
+            url: '/registration',
+            templateUrl:'registration.html',
+            controller:'registrationControl'
+        };
+
         $urlRouterProvider.otherwise('/login');
         $stateProvider.state(home);
         $stateProvider.state(addTask);
         $stateProvider.state(editTask);
         $stateProvider.state(login);
+        $stateProvider.state(registration);
     })
     .filter('startFrom',function(){
         return function(input,start){
