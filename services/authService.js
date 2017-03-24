@@ -12,13 +12,12 @@ angular.module('auth.services', [])
                     var logged = false;
                     if (token == null) {
                         console.log('Not LoggedIn');
-                        return logged;
                     }
                     else {
                         console.log('Logged In');
                         logged = true;
-                        return logged;
                     }
+                    return logged;
 
                 };
 
