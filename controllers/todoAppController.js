@@ -1,11 +1,14 @@
 /**
  * Created by federpc on 10/03/17.
  */
-angular.module('toDoApp.controllers', ['toDoApp.services'])
+angular.module('toDoApp.controllers', ['toDoApp.services','auth.services'])
 
-    .controller('taskListControl', ['$scope', '$state', 'toDoService','$uibModal', function ($scope, $state, toDoService, $uibModal) {
-
+    .controller('taskListControl', ['$scope','$state', 'toDoService','$uibModal','AuthenticationService','$window', function ($scope, $state, toDoService, $uibModal,authService,$window) {
+        if(!authService.CheckSession()){
+            $state.go('login');
+        }
         function init() {
+
             $scope.taskList = toDoService.getAll();
             $scope.itemsPerPage = 3;
             $scope.taskToShow = [];
@@ -18,7 +21,6 @@ angular.module('toDoApp.controllers', ['toDoApp.services'])
             $scope.bigTotalItems = 175;
             $scope.bigCurrentPage = 1;
         }
-
 
         $scope.deleteTask = function (id) {
             var task = toDoService.getOne(id);
@@ -46,7 +48,6 @@ angular.module('toDoApp.controllers', ['toDoApp.services'])
             modalInstance.result.then(function (task) {
                 toDoService.deleteTask(task);
                 init();
-                $scope.changePage($scope.currentPage);
             }, function () {
                 console.log('Modal dismissed at: ' + new Date());
             });
@@ -65,37 +66,43 @@ angular.module('toDoApp.controllers', ['toDoApp.services'])
 
         };
 
-        $scope.changePage = function (page) {
-           // $scope.currentPage = page;
-           // $scope.taskToShow = $scope.pagedList[page - 1];//pagedList[0]
-        };
-
         $scope.editTask = function (id) {
-            $state.go("editTask", {id: id});
+            $state.go("edit", {id: id});
         };
 
+        $scope.getAll = function(){
+            authService.GetAll($scope.token)
+                .then(function(response){
+                    $scope.allUsers = response;
+                })
+                .catch(function(error){
+                    console.log(error);
+                });
+        };
 
         init();
-        $scope.changePage($scope.currentPage)
 
 
     }])
-    .controller('addTaskControl', ['$scope', '$state', 'toDoService', '$stateParams', function ($scope, $state, toDoService, $stateParams) {
+    .controller('addTaskControl', ['$scope', '$state', 'toDoService', '$stateParams','AuthenticationService', function ($scope, $state, toDoService, $stateParams,authService) {
+        if(!authService.CheckSession()){
+            $state.go('login');
+        }
         function init() {
             $scope.newTask = {};
             $scope.taskList = toDoService.getAll();
             $scope.getDate();
-            if ($state.current.name == "editTask") {
+            if ($state.current.name == "edit") {
                 $scope.newTask = toDoService.getOne($state.params.id);
                 $scope.newTask.date = new Date($scope.newTask.date);
             }
         }
 
         $scope.addTask = function () {
-            if ($state.current.name == "addTask") {
+            if ($state.current.name == "add") {
                 $scope.newTask.id = Date.now();
             }
-            if ($state.current.name == "editTask") {
+            if ($state.current.name == "edit") {
                 for (var i = 0; i < $scope.taskList.length; i++) {
                     if ($scope.taskList[i].id == $scope.newTask.id) {
                         $scope.taskList.splice(i, 1);
@@ -109,22 +116,24 @@ angular.module('toDoApp.controllers', ['toDoApp.services'])
 
                 //push the new object
                 toDoService.addTask($scope.newTask);
+                $state.go('home');
             }
             else {
                 alert("There's another task with the same title");
             }
         };
 
-        $scope.validate = function (property, value) { ///Si invierto true por false no funciona, preguntar
+        $scope.validate = function (property, value) {
             $scope.taskList = toDoService.getAll();
+            var result = false;
             for (var i = 0; i < $scope.taskList.length; i++) {
                 if ($scope.taskList[i][property] == value) {
-                    return true
+                    result = true ;
                     break;
                 }
             }
+            return result;
         };
-
 
         $scope.clear = function () {
             var r = confirm("Do you want to cancel?");
@@ -154,7 +163,7 @@ angular.module('toDoApp.controllers', ['toDoApp.services'])
 
         $scope.getDate = function () {
             var today = new Date();
-            $scope.format = 'dd-MMM-y'
+            $scope.format = 'dd-MMM-y';
             $scope.newTask.date = today;
             $scope.dt = today;//ui datepicker
             date.onkeydown = function (e) {
@@ -180,4 +189,22 @@ angular.module('toDoApp.controllers', ['toDoApp.services'])
         init();
 
 
-    }]);
+    }])
+    .controller('loginControl',['$scope','$state','$window','AuthenticationService',function($scope,$state,$window,authService){
+
+        if(authService.CheckSession()){
+            $state.go('home');
+        }
+        $scope.login = function(user){
+        authService.Login(user.email,user.password)
+            .then(function(response){
+                $window.sessionStorage.setItem('token',response);
+                $state.go('home');
+            })
+            .catch(function(error){
+                $scope.loginError = true;
+                console.log(error);
+            })
+    };
+
+}]);

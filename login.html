@@ -1,0 +1,18 @@
+
+
+<div class="container">
+
+    <form class="form-signin" ng-submit="login(user)">
+        <h2 class="form-signin-heading">Sign in</h2>
+        <label for="email" class="sr-only">E-mail address</label>
+        <input ng-model="user.email" type="email" id="email" class="form-control" placeholder="Email address" required autofocus>
+        <label for="password" class="sr-only">Password</label>
+        <input ng-model="user.password" type="password" id="password" class="form-control" placeholder="Password" required>
+        <div  ng-show="loginError" class="text-center alert alert-danger">
+            <span  >The e-mail or password is incorrect</span>
+        </div>
+
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+    </form>
+
+</div> <!-- /container -->
