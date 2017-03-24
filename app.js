@@ -11,22 +11,22 @@ angular.module('toDoApp', ['ui.router','ui.bootstrap','ngAnimate', 'toDoApp.serv
             controller: 'taskListControl'
         };
 
-        var addTask = {
-            name: 'addTask',
+        var add ={
+            name: 'add',
             url: '/add',
             templateUrl: 'newTask.html',
             controller: 'addTaskControl'
         };
 
-        var editTask={
-            name: 'editTask',
+        var edit={
+            name: 'edit',
             url:'/edit/:id',
             templateUrl: 'newTask.html',
             controller:'addTaskControl'
         };
 
         var login={
-            name:'auth',
+            name:'login',
             url:'/login',
             templateUrl:'login.html',
             controller: 'loginControl'
@@ -34,8 +34,8 @@ angular.module('toDoApp', ['ui.router','ui.bootstrap','ngAnimate', 'toDoApp.serv
 
         $urlRouterProvider.otherwise('/login');
         $stateProvider.state(home);
-        $stateProvider.state(addTask);
-        $stateProvider.state(editTask);
+        $stateProvider.state(add);
+        $stateProvider.state(edit);
         $stateProvider.state(login);
     })
     .filter('startFrom',function(){

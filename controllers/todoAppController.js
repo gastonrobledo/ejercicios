@@ -4,9 +4,9 @@
 angular.module('toDoApp.controllers', ['toDoApp.services','auth.services'])
 
     .controller('taskListControl', ['$scope','$state', 'toDoService','$uibModal','AuthenticationService','$window', function ($scope, $state, toDoService, $uibModal,authService,$window) {
-
-
-        authService.CheckSession();
+        if(!authService.CheckSession()){
+            $state.go('login');
+        }
         function init() {
 
             $scope.taskList = toDoService.getAll();
@@ -48,7 +48,6 @@ angular.module('toDoApp.controllers', ['toDoApp.services','auth.services'])
             modalInstance.result.then(function (task) {
                 toDoService.deleteTask(task);
                 init();
-                $scope.changePage($scope.currentPage);
             }, function () {
                 console.log('Modal dismissed at: ' + new Date());
             });
@@ -67,13 +66,8 @@ angular.module('toDoApp.controllers', ['toDoApp.services','auth.services'])
 
         };
 
-        $scope.changePage = function (page) {
-           // $scope.currentPage = page;
-           // $scope.taskToShow = $scope.pagedList[page - 1];//pagedList[0]
-        };
-
         $scope.editTask = function (id) {
-            $state.go("editTask", {id: id});
+            $state.go("edit", {id: id});
         };
 
         $scope.getAll = function(){
@@ -86,29 +80,29 @@ angular.module('toDoApp.controllers', ['toDoApp.services','auth.services'])
                 });
         };
 
-
         init();
-        $scope.changePage($scope.currentPage)
 
 
     }])
     .controller('addTaskControl', ['$scope', '$state', 'toDoService', '$stateParams','AuthenticationService', function ($scope, $state, toDoService, $stateParams,authService) {
-        authService.CheckSession();
+        if(!authService.CheckSession()){
+            $state.go('login');
+        }
         function init() {
             $scope.newTask = {};
             $scope.taskList = toDoService.getAll();
             $scope.getDate();
-            if ($state.current.name == "editTask") {
+            if ($state.current.name == "edit") {
                 $scope.newTask = toDoService.getOne($state.params.id);
                 $scope.newTask.date = new Date($scope.newTask.date);
             }
         }
 
         $scope.addTask = function () {
-            if ($state.current.name == "addTask") {
+            if ($state.current.name == "add") {
                 $scope.newTask.id = Date.now();
             }
-            if ($state.current.name == "editTask") {
+            if ($state.current.name == "edit") {
                 for (var i = 0; i < $scope.taskList.length; i++) {
                     if ($scope.taskList[i].id == $scope.newTask.id) {
                         $scope.taskList.splice(i, 1);
@@ -129,14 +123,16 @@ angular.module('toDoApp.controllers', ['toDoApp.services','auth.services'])
             }
         };
 
-        $scope.validate = function (property, value) { ///Si invierto true por false no funciona, preguntar
+        $scope.validate = function (property, value) {
             $scope.taskList = toDoService.getAll();
+            var result = false;
             for (var i = 0; i < $scope.taskList.length; i++) {
                 if ($scope.taskList[i][property] == value) {
-                    return true
+                    result = true ;
                     break;
                 }
             }
+            return result;
         };
 
         $scope.clear = function () {
@@ -167,7 +163,7 @@ angular.module('toDoApp.controllers', ['toDoApp.services','auth.services'])
 
         $scope.getDate = function () {
             var today = new Date();
-            $scope.format = 'dd-MMM-y'
+            $scope.format = 'dd-MMM-y';
             $scope.newTask.date = today;
             $scope.dt = today;//ui datepicker
             date.onkeydown = function (e) {
@@ -198,7 +194,7 @@ angular.module('toDoApp.controllers', ['toDoApp.services','auth.services'])
 
         if(authService.CheckSession()){
             $state.go('home');
-        };
+        }
         $scope.login = function(user){
         authService.Login(user.email,user.password)
             .then(function(response){
