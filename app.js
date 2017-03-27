@@ -1,9 +1,9 @@
 /**
  * Created by federpc on 10/03/17.
  */
-angular.module('toDoApp', ['ui.router','ui.bootstrap','ngAnimate', 'toDoApp.services', 'toDoApp.controllers','auth.services'])
+angular.module('toDoApp', ['ui.router', 'ui.bootstrap', 'ngAnimate', 'toDoApp.services', 'toDoApp.controllers', 'auth.services', 'ngMessages'])
 
-    .config(function ($stateProvider,$urlRouterProvider) {
+    .config(function ($stateProvider, $urlRouterProvider) {
         var home = {
             name: 'home',
             url: '/',
@@ -11,32 +11,32 @@ angular.module('toDoApp', ['ui.router','ui.bootstrap','ngAnimate', 'toDoApp.serv
             controller: 'taskListControl'
         };
 
-        var add ={
+        var add = {
             name: 'add',
             url: '/add',
             templateUrl: 'newTask.html',
             controller: 'addTaskControl'
         };
 
-        var edit={
+        var edit = {
             name: 'edit',
-            url:'/edit/:id',
+            url: '/edit/:id',
             templateUrl: 'newTask.html',
-            controller:'addTaskControl'
+            controller: 'addTaskControl'
         };
 
-        var login={
-            name:'login',
-            url:'/login',
-            templateUrl:'login.html',
+        var login = {
+            name: 'login',
+            url: '/login',
+            templateUrl: 'login.html',
             controller: 'loginControl'
         };
 
-        var registration={
-            name :'registration',
+        var registration = {
+            name: 'registration',
             url: '/registration',
-            templateUrl:'registration.html',
-            controller:'registrationControl'
+            templateUrl: 'registration.html',
+            controller: 'registrationControl'
         };
 
         $urlRouterProvider.otherwise('/login');
@@ -46,9 +46,32 @@ angular.module('toDoApp', ['ui.router','ui.bootstrap','ngAnimate', 'toDoApp.serv
         $stateProvider.state(login);
         $stateProvider.state(registration);
     })
-    .filter('startFrom',function(){
-        return function(input,start){
+    .filter('startFrom', function () {
+        return function (input, start) {
             start = +start;
             return input.slice(start);
         };
     })
+    .directive('compareTo', function () {
+        return {
+            restrict: 'A',
+            require: '?ngModel',
+            link: function (scope, elem, attrs, ngModel) {
+                ngModel.$parsers.unshift(validate);//Adds validate() to the beginning of the $parsers array
+
+                scope.$watch(attrs.compareTo, function () { // Force-trigger the parsing pipeline.
+                    validate(ngModel.$viewValue);
+                });
+                function validate(value) {
+                    var isValid = scope.$eval(attrs.compareTo) == value; //attrs.compareTo = user.password
+
+                    ngModel.$setValidity('compareTo', isValid);
+
+                    return isValid ? value : undefined;
+                }
+            }
+        };
+    });
+
+
+

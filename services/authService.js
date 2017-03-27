@@ -3,7 +3,7 @@
  */
 angular.module('auth.services', [])
     .factory('AuthenticationService',
-        ['$http', '$q','$window',
+        ['$http', '$q', '$window',
             function ($http, $q, $window) {
                 var path = 'http://localhost:3000/api';
                 var service = {};

@@ -1,10 +1,10 @@
 /**
  * Created by federpc on 10/03/17.
  */
-angular.module('toDoApp.controllers', ['toDoApp.services','auth.services'])
+angular.module('toDoApp.controllers', ['toDoApp.services', 'auth.services'])
 
-    .controller('taskListControl', ['$scope','$state', 'toDoService','$uibModal','AuthenticationService','$window', function ($scope, $state, toDoService, $uibModal,authService,$window) {
-        if(!authService.checkSession()){
+    .controller('taskListControl', ['$scope', '$state', 'toDoService', '$uibModal', 'AuthenticationService', '$window', function ($scope, $state, toDoService, $uibModal, authService, $window) {
+        if (!authService.checkSession()) {
             $state.go('login');
         }
         function init() {
@@ -29,12 +29,12 @@ angular.module('toDoApp.controllers', ['toDoApp.services','auth.services'])
                 ariaLabelledBy: 'modal-title',
                 ariaDescribedBy: 'modal-body',
                 templateUrl: 'modal.html',
-                controller: ['$uibModalInstance', 'task', function($uibModalInstance, task){
+                controller: ['$uibModalInstance', 'task', function ($uibModalInstance, task) {
                     this.task = task;
-                    this.accept = function(){
+                    this.accept = function () {
                         $uibModalInstance.close(task);
                     };
-                    this.cancel = function(){
+                    this.cancel = function () {
                         $uibModalInstance.dismiss();
                     };
                 }],
@@ -70,12 +70,12 @@ angular.module('toDoApp.controllers', ['toDoApp.services','auth.services'])
             $state.go("edit", {id: id});
         };
 
-        $scope.getAll = function(){
+        $scope.getAll = function () {
             authService.GetAll($scope.token)
-                .then(function(response){
+                .then(function (response) {
                     $scope.allUsers = response;
                 })
-                .catch(function(error){
+                .catch(function (error) {
                     console.log(error);
                 });
         };
@@ -84,8 +84,8 @@ angular.module('toDoApp.controllers', ['toDoApp.services','auth.services'])
 
 
     }])
-    .controller('addTaskControl', ['$scope', '$state', 'toDoService', '$stateParams','AuthenticationService', function ($scope, $state, toDoService, $stateParams,authService) {
-        if(!authService.checkSession()){
+    .controller('addTaskControl', ['$scope', '$state', 'toDoService', '$stateParams', 'AuthenticationService', function ($scope, $state, toDoService, $stateParams, authService) {
+        if (!authService.checkSession()) {
             $state.go('login');
         }
         function init() {
@@ -128,7 +128,7 @@ angular.module('toDoApp.controllers', ['toDoApp.services','auth.services'])
             var result = false;
             for (var i = 0; i < $scope.taskList.length; i++) {
                 if ($scope.taskList[i][property] == value) {
-                    result = true ;
+                    result = true;
                     break;
                 }
             }
@@ -144,21 +144,21 @@ angular.module('toDoApp.controllers', ['toDoApp.services','auth.services'])
         };
 
         $scope.previewFile = function (element) {
-                var imageFile = element.files[0];
-                var reader = new FileReader();
+            var imageFile = element.files[0];
+            var reader = new FileReader();
 
-                reader.onloadend = function (){
-                    $scope.$apply(function(){
-                        $scope.newTask.imgPreview = reader.result;
-                    });
-                };
+            reader.onloadend = function () {
+                $scope.$apply(function () {
+                    $scope.newTask.imgPreview = reader.result;
+                });
+            };
 
-                if (imageFile) {
-                    reader.readAsDataURL(imageFile);
-                }
-                else{
-                    $scope.newTask.imgPreview ="https://getuikit.com/v2/docs/images/placeholder_600x400.svg";
-                }
+            if (imageFile) {
+                reader.readAsDataURL(imageFile);
+            }
+            else {
+                $scope.newTask.imgPreview = "https://getuikit.com/v2/docs/images/placeholder_600x400.svg";
+            }
         };
 
         $scope.getDate = function () {
@@ -172,7 +172,7 @@ angular.module('toDoApp.controllers', ['toDoApp.services','auth.services'])
             $scope.popup1 = {
                 opened: false
             };
-            $scope.open1 = function() {
+            $scope.open1 = function () {
                 $scope.popup1.opened = true;
             };
 
@@ -190,27 +190,27 @@ angular.module('toDoApp.controllers', ['toDoApp.services','auth.services'])
 
 
     }])
-    .controller('loginControl',['$scope','$state','$window','AuthenticationService',function($scope,$state,$window,authService){
+    .controller('loginControl', ['$scope', '$state', '$window', 'AuthenticationService', function ($scope, $state, $window, authService) {
 
-        if(authService.checkSession()){
+        if (authService.checkSession()) {
             $state.go('home');
         }
-        $scope.login = function(user){
-        authService.Login(user.email,user.password)
-            .then(function(response){
-                $window.sessionStorage.setItem('token',response);
-                $state.go('home');
-            })
-            .catch(function(error){
-                $scope.loginError = true;
-                console.log(error);
-            })
-    };
+        $scope.login = function (user) {
+            authService.Login(user.email, user.password)
+                .then(function (response) {
+                    $window.sessionStorage.setItem('token', response);
+                    $state.go('home');
+                })
+                .catch(function (error) {
+                    $scope.loginError = true;
+                    console.log(error);
+                })
+        };
 
-}])
-    .controller('registrationControl',['$scope','$state','AuthenticationService','ngMessages',function($scope,$state,authService,$ngMessages){
-        $scope.register = function(user,isValid) {
-            if (isValid) {
+    }])
+    .controller('registrationControl', ['$scope', '$state', 'AuthenticationService', function ($scope, $state, authService) {
+        $scope.register = function (user, form) {
+            if (form.$valid) {
                 authService.CreateUser(user)
                     .then(function (response) {
                         console.log(response.data);
@@ -218,7 +218,8 @@ angular.module('toDoApp.controllers', ['toDoApp.services','auth.services'])
                     })
                     .catch(function (error) {
                         console.log(error);
-                    })
+                    });
+                $state.go('login');
             }
         }
     }]);

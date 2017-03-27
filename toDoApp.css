@@ -1,24 +1,29 @@
-#tableDiv img{
+#tableDiv img {
     max-width: 120px;
     max-height: 120px;
 }
+
 .full button span {
     background-color: limegreen;
     border-radius: 32px;
     color: black;
 }
+
 .partially button span {
     background-color: orange;
     border-radius: 32px;
     color: black;
 }
-.input-group{
+
+.input-group {
     font-family: "Lato", sans-serif;
 }
-.input-group-btn{
+
+.input-group-btn {
     vertical-align: bottom;
 }
-#body{
+
+#body {
     background-color: #eee;
 }
 
@@ -28,13 +33,16 @@
     padding: 15px;
     margin: 0 auto;
 }
+
 .form-signin .form-signin-heading,
 .form-signin .checkbox {
     margin-bottom: 10px;
 }
+
 .form-signin .checkbox {
     font-weight: normal;
 }
+
 .form-signin .form-control {
     position: relative;
     height: auto;
@@ -44,22 +52,26 @@
     padding: 10px;
     font-size: 16px;
 }
+
 .form-signin .form-control:focus {
     z-index: 2;
 }
+
 .form-signin input[type="email"] {
     margin-bottom: -1px;
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
 }
+
 .form-signin input[type="password"] {
     margin-bottom: 10px;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
 }
+
 /* -----------End of Login Page -----------*/
 /* ---------Registration Page -----------*/
-body, html{
+body, html {
     height: 100%;
     background-repeat: no-repeat;
     background-color: #eee;
@@ -72,16 +84,16 @@ h1.title {
     font-weight: 400;
 }
 
-hr{
+hr {
     width: 10%;
     color: #fff;
 }
 
-.form-group{
+.form-group {
     margin-bottom: 15px;
 }
 
-label{
+label {
     margin-bottom: 15px;
 }
 
@@ -91,7 +103,7 @@ input::-webkit-input-placeholder {
     padding-top: 3px;
 }
 
-.main-login{
+.main-login {
     background-color: #fff;
     /* shadows and rounded borders */
     -moz-border-radius: 2px;
@@ -103,7 +115,7 @@ input::-webkit-input-placeholder {
 
 }
 
-.main-center{
+.main-center {
     margin-top: 30px;
     margin: 0 auto;
     max-width: 330px;
@@ -111,15 +123,21 @@ input::-webkit-input-placeholder {
 
 }
 
-.login-button{
+.login-button {
     margin-top: 5px;
 }
 
-.login-register{
+.login-register {
     font-size: 11px;
     text-align: center;
 }
-.help-block{
+
+.help-block {
     margin-bottom: -20px;
 }
+
+.msg {
+    margin-bottom: -15px;
+}
+
 /* --------- End of Registration Page -----------*/
