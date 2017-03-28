@@ -3,11 +3,11 @@
  */
 angular.module('auth.services', [])
     .factory('AuthenticationService',
-        ['$http', '$q','$window',
+        ['$http', '$q', '$window',
             function ($http, $q, $window) {
                 var path = 'http://localhost:3000/api';
                 var service = {};
-                service.CheckSession = function () {
+                service.checkSession = function () {
                     var token = $window.sessionStorage.getItem('token');
                     var logged = false;
                     if (token == null) {
