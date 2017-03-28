@@ -17,6 +17,10 @@
         <div class="text-center alert alert-info">
             <a ng-href="index.html#!/registration">You don't have an account? Register</a>
         </div>
+        <div ng-init="initMsg()" ng-class="{'alert-success': $root.userSaved != 'notSaved', 'alert-danger': $root.userSaved == 'notSaved'}" class="alert alert-dismissable fade in" ng-show="$root.userSaved">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>{{successMsg}}</strong>
+        </div>
     </form>
 
 </div> <!-- /container -->

@@ -15,28 +15,28 @@ angular.module('toDoApp', ['ui.router', 'ui.bootstrap', 'ngAnimate', 'toDoApp.se
             name: 'add',
             url: '/add',
             templateUrl: 'newTask.html',
-            controller: 'addTaskControl'
+            controller: 'addTaskController'
         };
 
         var edit = {
             name: 'edit',
             url: '/edit/:id',
             templateUrl: 'newTask.html',
-            controller: 'addTaskControl'
+            controller: 'addTaskController'
         };
 
         var login = {
             name: 'login',
             url: '/login',
             templateUrl: 'login.html',
-            controller: 'loginControl'
+            controller: 'loginController'
         };
 
         var registration = {
             name: 'registration',
             url: '/registration',
             templateUrl: 'registration.html',
-            controller: 'registrationControl'
+            controller: 'registrationController'
         };
 
         $urlRouterProvider.otherwise('/login');

@@ -3,7 +3,7 @@
  */
 angular.module('toDoApp.controllers', ['toDoApp.services', 'auth.services'])
 
-    .controller('taskListControl', ['$scope', '$state', 'toDoService', '$uibModal', 'AuthenticationService', '$window', function ($scope, $state, toDoService, $uibModal, authService, $window) {
+    .controller('taskListController', ['$scope', '$state', 'toDoService', '$uibModal', 'AuthenticationService', '$window', function ($scope, $state, toDoService, $uibModal, authService, $window) {
         if (!authService.checkSession()) {
             $state.go('login');
         }
@@ -84,7 +84,7 @@ angular.module('toDoApp.controllers', ['toDoApp.services', 'auth.services'])
 
 
     }])
-    .controller('addTaskControl', ['$scope', '$state', 'toDoService', '$stateParams', 'AuthenticationService', function ($scope, $state, toDoService, $stateParams, authService) {
+    .controller('addTaskController', ['$scope', '$state', 'toDoService', '$stateParams', 'AuthenticationService', function ($scope, $state, toDoService, $stateParams, authService) {
         if (!authService.checkSession()) {
             $state.go('login');
         }
@@ -190,11 +190,12 @@ angular.module('toDoApp.controllers', ['toDoApp.services', 'auth.services'])
 
 
     }])
-    .controller('loginControl', ['$scope', '$state', '$window', 'AuthenticationService', function ($scope, $state, $window, authService) {
+    .controller('loginController', ['$rootScope','$scope', '$state', '$window', 'AuthenticationService', function ($rootScope,$scope, $state, $window, authService) {
 
         if (authService.checkSession()) {
             $state.go('home');
         }
+        $scope.user = {};
         $scope.login = function (user) {
             authService.Login(user.email, user.password)
                 .then(function (response) {
@@ -206,20 +207,36 @@ angular.module('toDoApp.controllers', ['toDoApp.services', 'auth.services'])
                     console.log(error);
                 })
         };
+        $scope.initMsg = function(){
+            if($rootScope.userSaved && $rootScope.userSaved != 'notSaved'){
+                $scope.successMsg =  "The user "+$rootScope.userSaved.email+ " was successfully created!";
+                $scope.user.email = $rootScope.userSaved.email;
+            }
+            else if($rootScope.userSaved && $rootScope.userSaved == 'notSaved'){
+                $scope.successMsg =  "There was a problem, try again";
+            }
+
+        }
+
 
     }])
-    .controller('registrationControl', ['$scope', '$state', 'AuthenticationService', function ($scope, $state, authService) {
+    .controller('registrationController', ['$rootScope','$scope', '$state', 'AuthenticationService', function ($rootScope,$scope, $state, authService) {
         $scope.register = function (user, form) {
             if (form.$valid) {
                 authService.CreateUser(user)
                     .then(function (response) {
                         console.log(response.data);
                         console.log(user);
+                        $rootScope.userSaved = user;
                     })
                     .catch(function (error) {
+                        $rootScope.userSaved = 'notSaved';
                         console.log(error);
-                    });
-                $state.go('login');
+                    }).finally(function () {
+                    $state.go('login');
+                });
+
+
             }
         }
     }]);
