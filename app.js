@@ -1,14 +1,14 @@
 /**
  * Created by federpc on 10/03/17.
  */
-angular.module('toDoApp', ['ui.router', 'ui.bootstrap', 'ngAnimate', 'toDoApp.services', 'toDoApp.controllers', 'auth.services', 'ngMessages'])
+angular.module('toDoApp', ['ui.router', 'ui.bootstrap', 'ngAnimate', 'toDoApp.services', 'toDoApp.controllers', 'auth.services', 'ngMessages','angularMoment'])
 
     .config(function ($stateProvider, $urlRouterProvider) {
         var home = {
             name: 'home',
             url: '/',
             templateUrl: 'home.html',
-            controller: 'taskListControl'
+            controller: 'taskListController'
         };
 
         var add = {
@@ -39,12 +39,28 @@ angular.module('toDoApp', ['ui.router', 'ui.bootstrap', 'ngAnimate', 'toDoApp.se
             controller: 'registrationController'
         };
 
+        var forgot ={
+            name: 'forgot',
+            url:'/forgot',
+            templateUrl:'forgot.html',
+            controller:'forgotController'
+        };
+
+        var resetPassword ={
+            name:'resetPassword',
+            url: '/resetPassword/:token',
+            templateUrl: 'resetPassword.html',
+            controller: 'resetPasswordController'
+        };
+
         $urlRouterProvider.otherwise('/login');
         $stateProvider.state(home);
         $stateProvider.state(add);
         $stateProvider.state(edit);
         $stateProvider.state(login);
         $stateProvider.state(registration);
+        $stateProvider.state(forgot);
+        $stateProvider.state(resetPassword);
     })
     .filter('startFrom', function () {
         return function (input, start) {

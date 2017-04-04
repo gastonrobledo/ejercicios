@@ -30,55 +30,43 @@ angular.module('auth.services', [])
                         })
                         .catch(function (error) {
                             deferred.reject(error);
-                            console.log('Some error as occurred!: ' + error);
+                            console.log('Some error has occurred!: ' + error);
                         });
                     return deferred.promise;
                 };
 
                 service.CreateUser = function (user) {
-                    var deferred = $q.defer();
                     $http.post(path + '/users', user)
-                        .then(function (response) {
-                            deferred.resolve(response);
-                            console.log('User saved:' + response);
-                        })
-                        .catch(function (error) {
-                            deferred.reject(error);
-                            console.log('Some error as occurred: ' + error)
-                        });
-                    return deferred.promise;
-
                 };
 
                 service.GetAll = function (token) {
-                    var deferred = $q.defer();
 
-                    $http.get(path + '/users', {headers: {'x-access-token': token}})
-                        .then(function (response) {
-                            deferred.resolve(response.data);
-                            console.log(response);
-                        })
-                        .catch(function (error) {
-                            deferred.resolve(error);
-                            console.log('Some error as occurred: ' + error)
-                        });
-                    return deferred.promise;
-
+                    return $http.get(path + '/users', {headers: {'x-access-token': token}});
                 };
 
                 service.GetOne = function (id) {
-                    var deferred = $q.defer();
-                    $http.get(path + '/users', id)
-                        .then(function (response) {
-                            deferred.resolve(response);
-                            console.log(response);
-                        })
-                        .catch(function (error) {
-                            deferred.reject(error);
-                            console.log('Some error as occurred: ' + error)
-                        });
-                    return deferred.promise;
+                    return $http.get(path + '/users', id);
                 };
 
+                service.SendResetToken = function (email) {
+                    return $http.post(path + '/recover-password', {email: email});
+                };
+
+                service.GetOneByToken = function (token) {
+                    return $http.get(path + '/users/reset/'+token);
+                };
+
+                service.UpdateUser = function (user,token) {
+                    var config = {
+                        method: 'PUT',
+                        url: path + '/auth/'+user._id,
+                        data: user,
+                        headers: {
+                            'x-access-token': token
+                        },
+                        cache: true
+                    };
+                    return $http(config);
+                };
                 return service;
             }]);
