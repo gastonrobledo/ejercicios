@@ -108,9 +108,7 @@ angular.module('toDoApp.controllers', ['toDoApp.services', 'auth.services'])
                         $scope.taskList.splice(i, 1);
                         break;
                     }
-
                 }
-
             }
             if (!$scope.validate("title", $scope.newTask.title)) {
 
@@ -190,7 +188,7 @@ angular.module('toDoApp.controllers', ['toDoApp.services', 'auth.services'])
 
 
     }])
-    .controller('loginController', ['$rootScope','$scope', '$state', '$window', 'AuthenticationService', function ($rootScope,$scope, $state, $window, authService) {
+    .controller('loginController', ['$rootScope', '$scope', '$state', '$window', 'AuthenticationService', function ($rootScope, $scope, $state, $window, authService) {
 
         if (authService.checkSession()) {
             $state.go('home');
@@ -207,20 +205,20 @@ angular.module('toDoApp.controllers', ['toDoApp.services', 'auth.services'])
                     console.log(error);
                 })
         };
-        $scope.initMsg = function(){
-            if($rootScope.userSaved && $rootScope.userSaved != 'notSaved'){
-                $scope.successMsg =  "The user "+$rootScope.userSaved.email+ " was successfully created!";
+        $scope.initMsg = function () {
+            if ($rootScope.userSaved && $rootScope.userSaved != 'notSaved') {
+                $scope.successMsg = "The user " + $rootScope.userSaved.email + " was successfully created!";
                 $scope.user.email = $rootScope.userSaved.email;
             }
-            else if($rootScope.userSaved && $rootScope.userSaved == 'notSaved'){
-                $scope.successMsg =  "There was a problem, try again";
+            else if ($rootScope.userSaved && $rootScope.userSaved == 'notSaved') {
+                $scope.successMsg = "There was a problem, try again";
             }
 
         }
 
 
     }])
-    .controller('registrationController', ['$rootScope','$scope', '$state', 'AuthenticationService', function ($rootScope,$scope, $state, authService) {
+    .controller('registrationController', ['$rootScope', '$scope', '$state', 'AuthenticationService', function ($rootScope, $scope, $state, authService) {
         $scope.register = function (user, form) {
             if (form.$valid) {
                 authService.CreateUser(user)
@@ -239,4 +237,64 @@ angular.module('toDoApp.controllers', ['toDoApp.services', 'auth.services'])
 
             }
         }
+    }])
+    .controller('forgotController', ['$scope', '$state', 'AuthenticationService', function ($scope, $state, authService) {
+        $scope.msgSpan = true;
+        $scope.reset = function (email, form) {
+            if (form.$valid) {
+                authService.SendResetToken(email)
+                    .then(function (response) {
+                        console.log(response.data);
+                        $scope.resetMsg = "Check your email to reset your password";
+                        $scope.hideForm = true;
+                        $scope.msgSpan = false;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }
+        }
+    }])
+    .controller('resetPasswordController', ['$scope', '$state', 'AuthenticationService', 'moment', function ($scope, $state, authService, moment) {
+        $scope.showSuccessMsg = false;
+        $scope.showErrorMsg = false;
+        var userRetrieved = {};
+        authService.GetOneByToken($state.params.token)
+            .then(function (response) {
+                userRetrieved = response.data;
+                $scope.showForm = true;
+            })
+            .catch(function (error) {
+                $scope.showForm = false;
+                $scope.errorMsg = 'The reset token has expired or is invalid!';
+                $scope.showErrorMsg = true;
+                console.log(error);
+            });
+        $scope.ResetPassword = function (form) {
+            if (form.$valid) {
+                var expirationDate = moment(userRetrieved.resetPasswordExpires).utc().format();
+                var today = moment().utc().format();
+                if (expirationDate >= today) {
+                    var token = userRetrieved.resetPasswordToken;
+                    userRetrieved.resetPasswordToken = "";
+                    userRetrieved.password = $scope.password;
+                    userRetrieved.updated = today;
+                    authService.UpdateUser(userRetrieved, token)
+                        .then(function () {
+                            $scope.showForm = false;
+                            $scope.successMsg = 'Your password has been successfully changed!';
+                            $scope.showSuccessMsg = true;
+                        })
+                        .catch(function (error) {
+                            $scope.errorMsg = "The user can't be updated, try again later";
+                            $scope.showErrorMsg = true;
+                            console.log(error);
+                        });
+                }
+                else {
+                    $scope.showErrorMsg = true;
+                }
+            }
+        }
+
     }]);

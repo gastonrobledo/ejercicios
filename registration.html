@@ -19,8 +19,7 @@
                                    ng-model="user.firstName" placeholder="Enter your first name" ng-required="true"/>
                         </div>
                         <div ng-messages="registrationForm.firstName.$error"
-                             ng-show="registrationForm.firstName.$invalid && registrationForm.firstName.$touched"
-                             style="color: #d43f3a">
+                             ng-show="registrationForm.firstName.$invalid && registrationForm.firstName.$touched">
                             <p class="msg" ng-message="required">First name is required</p>
                         </div>
                     </div>
